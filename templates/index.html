@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Prescription Verification System</title>
+</head>
+<body style="font-family: Arial; max-width: 500px; margin: 50px auto; text-align: center;">
+    <h2>Smart Prescription Verification System</h2>
+    <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" required><br><br>
+        <button type="submit">Check Prescription</button>
+    </form>
+    <pre id="result" style="text-align: left; white-space: pre-wrap;"></pre>
+
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById("imageInput");
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            document.getElementById("result").textContent = "Processing...";
+
+            const response = await fetch("/predict", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>

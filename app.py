@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from PIL import Image
 import pytesseract
 from difflib import get_close_matches
@@ -18,7 +18,7 @@ def check_medicines(text):
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Smart Prescription Verification System is running."
+    return render_template("index.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():

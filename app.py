@@ -93,7 +93,6 @@ def load_medicine_catalog():
                 name = (row.get("generic_name") or "").strip()
                 if not name:
                     continue
-
                 medicines.append({
                     "generic_name": name,
                     "aliases": split_values(row.get("aliases")),
@@ -153,6 +152,7 @@ def match_medicines(text):
         combined_text = " ".join(lines).lower()
 
         detected_strengths = []
+
         for strength in re.findall(
             r"\b\d+(?:\.\d+)?\s*(?:mg|mcg|g|ml|mL|iu|units?)"
             r"(?:\s*/\s*\d+(?:\.\d+)?\s*(?:ml|mL))?\b",
@@ -199,7 +199,6 @@ def match_medicines(text):
             for candidate, candidate_type in candidates:
                 if not candidate:
                     continue
-
                 if re.search(
                     r"(?<![a-z0-9])" + re.escape(candidate.lower()) + r"(?![a-z0-9])",
                     name_to_check.lower(),
@@ -226,19 +225,6 @@ def match_medicines(text):
 
         # Avoid fuzzy matching an entire prescription sentence.
         if suggested is None and best_ratio < 0.78:
-            results.append({
-                "suggested_medicine": None,
-                "match_type": "unknown",
-                "detected_strengths": detected_strengths,
-                "detected_forms": detected_forms,
-                "strength_status": "not_detected" if not detected_strengths else "unknown",
-                "form_status": "not_detected" if not detected_forms else "unknown",
-                "verification_status": "unknown_medicine",
-                "requires_human_confirmation": True,
-            })
-            continue
-
-        if suggested is None:
             results.append({
                 "suggested_medicine": None,
                 "match_type": "unknown",
@@ -665,4 +651,4 @@ def not_found(error):
 # ============================================================
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)

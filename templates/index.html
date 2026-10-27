@@ -1,32 +1,1037 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Smart Prescription Verification System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Prescription Verification</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #102c54, #176b87);
+            color: white;
+            padding: 28px 6%;
+        }
+
+        header h1 {
+            font-size: 27px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #d9eaf3;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 28px auto;
+            padding: 0 20px 40px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-pill {
+            background: #e1f5ed;
+            color: #087650;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e1e8f0;
+            border-radius: 15px;
+            padding: 23px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 20px rgba(24, 47, 79, 0.04);
+            min-width: 0;
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin-bottom: 7px;
+        }
+
+        .subtitle {
+            color: #69778a;
+            font-size: 13px;
+            margin-bottom: 19px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 14px 0 7px;
+        }
+
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d6deea;
+            border-radius: 9px;
+            padding: 12px;
+            font: inherit;
+            font-size: 14px;
+            background: #fff;
+            color: #172033;
+        }
+
+        textarea {
+            min-height: 245px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        select:focus,
+        textarea:focus,
+        input:focus {
+            outline: 2px solid #a8d9ed;
+            border-color: #176b87;
+        }
+
+        button {
+            border: 0;
+            border-radius: 9px;
+            padding: 12px 17px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .primary {
+            background: #176b87;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #10556d;
+        }
+
+        .secondary {
+            background: #e9f1f7;
+            color: #17425e;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 14px;
+        }
+
+        .notice {
+            background: #fff7e7;
+            border: 1px solid #f4dfad;
+            color: #805b13;
+            padding: 12px 14px;
+            border-radius: 9px;
+            font-size: 12px;
+            margin-top: 16px;
+        }
+
+        .message {
+            display: none;
+            padding: 12px 14px;
+            border-radius: 9px;
+            margin-bottom: 17px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff0f0;
+            color: #a12222;
+            border: 1px solid #f1cccc;
+        }
+
+        .message.success {
+            display: block;
+            background: #eaf8f0;
+            color: #126c42;
+            border: 1px solid #c6ead5;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 17px 0;
+        }
+
+        .metric {
+            padding: 13px;
+            background: #f3f7fb;
+            border-radius: 10px;
+        }
+
+        .metric strong {
+            display: block;
+            font-size: 20px;
+            color: #164c70;
+        }
+
+        .metric span {
+            color: #66778a;
+            font-size: 11px;
+        }
+
+        .results-section {
+            margin-top: 24px;
+        }
+
+        .result-card {
+            border: 1px solid #e0e7ef;
+            border-radius: 11px;
+            padding: 17px;
+            margin-top: 12px;
+            background: #fff;
+        }
+
+        .result-card h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-card p {
+            font-size: 13px;
+            margin: 5px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 3px 3px 3px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #eaf1f8;
+            color: #315574;
+        }
+
+        .tag.warning {
+            background: #fff0d4;
+            color: #86580c;
+        }
+
+        .tag.good {
+            background: #dff5e8;
+            color: #146c43;
+        }
+
+        .empty {
+            text-align: center;
+            color: #748195;
+            padding: 28px 10px;
+            font-size: 13px;
+        }
+
+        .small {
+            font-size: 12px;
+            color: #748195;
+            margin-top: 9px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .footer {
+            text-align: center;
+            color: #748195;
+            font-size: 12px;
+            padding: 15px;
+        }
+
+        @media (max-width: 760px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
-<body style="font-family: Arial; max-width: 500px; margin: 50px auto; text-align: center;">
-    <h2>Smart Prescription Verification System</h2>
-    <form id="uploadForm">
-        <input type="file" id="imageInput" accept="image/*" required><br><br>
-        <button type="submit">Check Prescription</button>
-    </form>
-    <pre id="result" style="text-align: left; white-space: pre-wrap;"></pre>
 
-    <script>
-        document.getElementById("uploadForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            const fileInput = document.getElementById("imageInput");
-            const formData = new FormData();
-            formData.append("image", fileInput.files[0]);
+<body>
+<header>
+    <h1>Smart Prescription Verification System</h1>
+    <p>Prescription OCR, medicine catalogue matching, and manual review support</p>
+</header>
 
-            document.getElementById("result").textContent = "Processing...";
+<main class="container">
+    <div class="status-bar">
+        <div>
+            <strong>Prescription Review Dashboard</strong>
+            <div class="small">Extract text, correct OCR mistakes, and check possible catalogue matches.</div>
+        </div>
+        <span class="status-pill" id="systemStatus">Checking system...</span>
+    </div>
 
+    <div id="globalMessage" class="message"></div>
+
+    <div class="layout">
+        <section class="panel">
+            <h2>1. Upload Prescription</h2>
+            <p class="subtitle">Upload a clear image of a printed or handwritten prescription.</p>
+
+            <form id="uploadForm">
+                <label for="prescriptionImage">Prescription image</label>
+                <input
+                    type="file"
+                    id="prescriptionImage"
+                    name="image"
+                    accept="image/*"
+                    required
+                >
+
+                <label for="documentType">Prescription type</label>
+                <select id="documentType" name="document_type">
+                    <option value="printed">Printed prescription</option>
+                    <option value="handwritten">Handwritten prescription</option>
+                </select>
+
+                <div class="button-row">
+                    <button class="primary" id="extractButton" type="submit">
+                        Extract Text
+                    </button>
+                    <button class="secondary" type="button" id="clearButton">
+                        Clear
+                    </button>
+                </div>
+            </form>
+
+            <div id="imagePreviewContainer" style="display:none; margin-top:18px;">
+                <label>Selected image</label>
+                <img
+                    id="imagePreview"
+                    alt="Prescription preview"
+                    style="display:block;max-width:100%;max-height:360px;object-fit:contain;border-radius:9px;border:1px solid #e0e7ef;"
+                >
+            </div>
+
+            <div class="notice">
+                <strong>Important:</strong> Handwriting may be misread by OCR. Extracted text and medicine suggestions are not a medical diagnosis or confirmation that a prescription is safe.
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>2. Extracted OCR Text</h2>
+            <p class="subtitle">
+                Review the extracted text below. Correct medicine names or other errors before verification.
+            </p>
+
+            <label for="ocrText">Editable prescription text</label>
+            <textarea
+                id="ocrText"
+                placeholder="The extracted prescription text will appear here. You can also type or paste text manually."
+            ></textarea>
+
+            <div class="button-row">
+                <button class="primary" id="verifyCorrectedButton" type="button">
+                    Verify Corrected Text
+                </button>
+                <button class="secondary" id="restoreOcrButton" type="button">
+                    Restore OCR Text
+                </button>
+            </div>
+
+            <p class="small">
+                Verification uses the text currently in this box. It does not independently confirm the doctor's handwriting or clinical suitability.
+            </p>
+        </section>
+
+        <section class="panel full-width">
+            <h2>3. OCR Information</h2>
+            <p class="subtitle">Basic information returned by the OCR engine.</p>
+
+            <div class="metrics">
+                <div class="metric">
+                    <strong id="confidenceMetric">—</strong>
+                    <span>OCR confidence</span>
+                </div>
+                <div class="metric">
+                    <strong id="wordMetric">—</strong>
+                    <span>Words detected</span>
+                </div>
+                <div class="metric">
+                    <strong id="catalogueMetric">—</strong>
+                    <span>Catalogue entries</span>
+                </div>
+            </div>
+
+            <p class="small" id="confidenceNote">
+                OCR confidence is not the same as actual recognition accuracy.
+            </p>
+        </section>
+
+        <section class="panel full-width results-section">
+            <h2>4. Medicine Verification Results</h2>
+            <p class="subtitle">
+                Possible catalogue matches and attribute comparisons. All candidates require human confirmation.
+            </p>
+
+            <div id="resultSummary" class="message"></div>
+            <div id="resultsContainer">
+                <div class="empty">
+                    Upload a prescription or enter text above, then run verification.
+                </div>
+            </div>
+
+            <div id="warningsContainer"></div>
+        </section>
+    </div>
+
+    <div class="footer">
+        Smart Prescription Verification System · Educational prototype · Human review required
+    </div>
+</main>
+
+<script>
+    "use strict";
+
+    const uploadForm = document.getElementById("uploadForm");
+    const imageInput = document.getElementById("prescriptionImage");
+    const documentTypeInput = document.getElementById("documentType");
+    const ocrText = document.getElementById("ocrText");
+
+    const extractButton = document.getElementById("extractButton");
+    const verifyCorrectedButton = document.getElementById("verifyCorrectedButton");
+    const restoreOcrButton = document.getElementById("restoreOcrButton");
+    const clearButton = document.getElementById("clearButton");
+
+    const globalMessage = document.getElementById("globalMessage");
+    const resultSummary = document.getElementById("resultSummary");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const warningsContainer = document.getElementById("warningsContainer");
+
+    const confidenceMetric = document.getElementById("confidenceMetric");
+    const wordMetric = document.getElementById("wordMetric");
+    const catalogueMetric = document.getElementById("catalogueMetric");
+    const confidenceNote = document.getElementById("confidenceNote");
+    const systemStatus = document.getElementById("systemStatus");
+
+    const imagePreview = document.getElementById("imagePreview");
+    const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+
+    let originalOcrText = "";
+    let previewUrl = null;
+
+    function showMessage(element, message, type) {
+        element.textContent = message || "";
+        element.className = "message";
+
+        if (message) {
+            element.classList.add(type === "error" ? "error" : "success");
+        }
+    }
+
+    function getNumber(value) {
+        if (value === null || value === undefined || value === "") {
+            return null;
+        }
+
+        const number = Number(value);
+        return Number.isFinite(number) ? number : null;
+    }
+
+    function formatPercent(value) {
+        const number = getNumber(value);
+
+        if (number === null) {
+            return "—";
+        }
+
+        return number.toFixed(1) + "%";
+    }
+
+    function safeString(value) {
+        if (value === null || value === undefined || value === "") {
+            return "Not available";
+        }
+
+        if (Array.isArray(value)) {
+            return value.length ? value.join(", ") : "Not detected";
+        }
+
+        if (typeof value === "object") {
+            return JSON.stringify(value);
+        }
+
+        return String(value);
+    }
+
+    function firstValue(object, keys) {
+        for (const key of keys) {
+            if (
+                object &&
+                Object.prototype.hasOwnProperty.call(object, key) &&
+                object[key] !== null &&
+                object[key] !== undefined
+            ) {
+                return object[key];
+            }
+        }
+
+        return null;
+    }
+
+    function setLoading(button, loading, loadingText, normalText) {
+        button.disabled = loading;
+        button.textContent = loading ? loadingText : normalText;
+    }
+
+    async function postJson(url, body) {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        });
+
+        let data;
+
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error("The server returned an invalid response. Check the Flask terminal.");
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                data.error ||
+                data.message ||
+                "Request failed with status " + response.status
+            );
+        }
+
+        return data;
+    }
+
+    async function checkHealth() {
+        try {
+            const response = await fetch("/health");
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error("Health check failed");
+            }
+
+            systemStatus.textContent = "System connected";
+
+            const count = firstValue(data, [
+                "catalogue_entries",
+                "catalogue_count",
+                "medicine_count",
+                "catalogue_size"
+            ]);
+
+            if (count !== null) {
+                catalogueMetric.textContent = safeString(count);
+            }
+
+            if (data.catalogue_valid === false) {
+                systemStatus.textContent = "Catalogue issue";
+            }
+        } catch {
+            systemStatus.textContent = "Connection issue";
+        }
+    }
+
+    function updateMetrics(data) {
+        const ocr = data.ocr || data.ocr_metadata || {};
+
+        const confidence = firstValue(ocr, [
+            "mean_confidence",
+            "average_confidence",
+            "confidence",
+            "mean_word_confidence",
+            "ocr_confidence"
+        ]);
+
+        const wordCount = firstValue(ocr, [
+            "word_count",
+            "words_detected",
+            "detected_words",
+            "total_words"
+        ]);
+
+        const catalogueCount = firstValue(data, [
+            "catalogue_entries",
+            "catalogue_count",
+            "medicine_count"
+        ]);
+
+        if (confidence !== null) {
+            const number = getNumber(confidence);
+
+            if (number !== null) {
+                confidenceMetric.textContent =
+                    number <= 1 && number >= 0
+                        ? (number * 100).toFixed(1) + "%"
+                        : number.toFixed(1) + "%";
+            } else {
+                confidenceMetric.textContent = safeString(confidence);
+            }
+        } else {
+            confidenceMetric.textContent = "—";
+        }
+
+        if (wordCount !== null) {
+            wordMetric.textContent = safeString(wordCount);
+        } else {
+            const text = ocrText.value.trim();
+            wordMetric.textContent = text ? String(text.split(/\s+/).length) : "—";
+        }
+
+        if (catalogueCount !== null) {
+            catalogueMetric.textContent = safeString(catalogueCount);
+        }
+
+        confidenceNote.textContent =
+            "OCR confidence estimates the OCR engine's certainty. It does not prove that a medicine name was recognized correctly.";
+    }
+
+    function addTag(parent, text, type) {
+        const span = document.createElement("span");
+        span.className = "tag" + (type ? " " + type : "");
+        span.textContent = text;
+        parent.appendChild(span);
+    }
+
+    function addDetail(card, label, value) {
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(safeString(value)));
+        card.appendChild(p);
+    }
+
+    function renderResults(data) {
+        resultsContainer.replaceChildren();
+        warningsContainer.replaceChildren();
+
+        const matches = Array.isArray(data.matches) ? data.matches : [];
+
+        const summaryMessage =
+            data.message ||
+            data.verification_message ||
+            (matches.length
+                ? "Possible catalogue matches were returned. Review each candidate."
+                : "No confident catalogue matches were found. Manual review is required.");
+
+        showMessage(
+            resultSummary,
+            summaryMessage,
+            matches.length ? "success" : "error"
+        );
+
+        if (!matches.length) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent =
+                "No medicine candidates were returned. This does not mean the prescription contains no medicine. Check the corrected text and catalogue, then review the original prescription with a qualified professional.";
+            resultsContainer.appendChild(empty);
+        }
+
+        matches.forEach((match, index) => {
+            const card = document.createElement("article");
+            card.className = "result-card";
+
+            const title = document.createElement("h3");
+
+            const medicineName = firstValue(match, [
+                "suggested_medicine",
+                "matched_medicine",
+                "medicine_name",
+                "generic_name",
+                "name"
+            ]);
+
+            title.textContent =
+                (index + 1) + ". " +
+                (medicineName !== null
+                    ? safeString(medicineName)
+                    : "Unconfirmed medicine candidate");
+
+            card.appendChild(title);
+
+            const extracted = firstValue(match, [
+                "extracted",
+                "matched_line",
+                "original_text",
+                "detected_text",
+                "input_text"
+            ]);
+
+            addDetail(card, "Prescription text", extracted);
+
+            const matchType = firstValue(match, [
+                "match_type",
+                "matching_method"
+            ]);
+
+            if (matchType !== null) {
+                addDetail(card, "Match method", matchType);
+            }
+
+            const similarity = firstValue(match, [
+                "similarity",
+                "similarity_score",
+                "match_score"
+            ]);
+
+            if (similarity !== null) {
+                const numericSimilarity = getNumber(similarity);
+
+                addDetail(
+                    card,
+                    "Text similarity",
+                    numericSimilarity === null
+                        ? similarity
+                        : (
+                            numericSimilarity <= 1
+                                ? (numericSimilarity * 100).toFixed(1) + "%"
+                                : numericSimilarity.toFixed(1) + "%"
+                        )
+                );
+            }
+
+            addDetail(
+                card,
+                "Catalogue strength",
+                firstValue(match, ["strengths", "catalogue_strengths"])
+            );
+
+            addDetail(
+                card,
+                "Detected strength",
+                firstValue(match, ["detected_strengths", "detected_strength"])
+            );
+
+            addDetail(
+                card,
+                "Catalogue form",
+                firstValue(match, ["forms", "catalogue_forms"])
+            );
+
+            addDetail(
+                card,
+                "Detected form",
+                firstValue(match, ["detected_forms", "detected_form"])
+            );
+
+            const strengthStatus = firstValue(match, ["strength_status"]);
+            const formStatus = firstValue(match, ["form_status"]);
+
+            if (strengthStatus !== null) {
+                addTag(card, "Strength: " + safeString(strengthStatus),
+                    String(strengthStatus).toLowerCase().includes("match")
+                        ? "good"
+                        : "warning"
+                );
+            }
+
+            if (formStatus !== null) {
+                addTag(card, "Form: " + safeString(formStatus),
+                    String(formStatus).toLowerCase().includes("match")
+                        ? "good"
+                        : "warning"
+                );
+            }
+
+            addTag(card, "Human confirmation required", "warning");
+
+            const status = firstValue(match, [
+                "verification_status",
+                "status"
+            ]);
+
+            if (status !== null) {
+                addDetail(card, "Review status", status);
+            }
+
+            resultsContainer.appendChild(card);
+        });
+
+        const warnings = Array.isArray(data.warnings) ? data.warnings : [];
+
+        if (warnings.length) {
+            const warningPanel = document.createElement("div");
+            warningPanel.className = "notice";
+
+            const heading = document.createElement("strong");
+            heading.textContent = "Warnings and limitations";
+            warningPanel.appendChild(heading);
+
+            const list = document.createElement("ul");
+            list.style.paddingLeft = "20px";
+            list.style.marginTop = "8px";
+
+            warnings.forEach(warning => {
+                const item = document.createElement("li");
+                item.textContent = safeString(warning);
+                list.appendChild(item);
+            });
+
+            warningPanel.appendChild(list);
+            warningsContainer.appendChild(warningPanel);
+        }
+
+        const status = data.verification_status;
+
+        if (status) {
+            const statusParagraph = document.createElement("p");
+            statusParagraph.className = "small";
+            statusParagraph.textContent =
+                "Overall status: " + safeString(status);
+            warningsContainer.appendChild(statusParagraph);
+        }
+    }
+
+    uploadForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const file = imageInput.files[0];
+
+        if (!file) {
+            showMessage(globalMessage, "Please select a prescription image first.", "error");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("document_type", documentTypeInput.value);
+
+        setLoading(extractButton, true, "Extracting...", "Extract Text");
+        showMessage(globalMessage, "", "success");
+
+        try {
             const response = await fetch("/predict", {
                 method: "POST",
                 body: formData
             });
-            const data = await response.json();
-            document.getElementById("result").textContent = JSON.stringify(data, null, 2);
-        });
-    </script>
+
+            let data;
+
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error("The server response was not valid JSON. Check the Flask terminal.");
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    data.message ||
+                    "OCR failed with status " + response.status
+                );
+            }
+
+            const extractedText =
+                data.extracted_text ??
+                data.recognized_text ??
+                data.ocr_text ??
+                data.text ??
+                data.ocr?.text ??
+                "";
+
+            originalOcrText =
+                String(extractedText);
+
+            ocrText.value = originalOcrText;
+
+            updateMetrics(data);
+            renderResults(data);
+
+            showMessage(
+                globalMessage,
+                originalOcrText
+                    ? "OCR completed. Review and correct the extracted text before verification."
+                    : "The OCR engine returned no text. Try a clearer image or enter the text manually.",
+                originalOcrText ? "success" : "error"
+            );
+        } catch (error) {
+            showMessage(
+                globalMessage,
+                "Could not process prescription: " + error.message,
+                "error"
+            );
+        } finally {
+            setLoading(extractButton, false, "Extracting...", "Extract Text");
+        }
+    });
+
+    verifyCorrectedButton.addEventListener("click", async function () {
+        const text = ocrText.value.trim();
+
+        if (!text) {
+            showMessage(
+                globalMessage,
+                "Enter or extract prescription text before verification.",
+                "error"
+            );
+            ocrText.focus();
+            return;
+        }
+
+        setLoading(
+            verifyCorrectedButton,
+            true,
+            "Verifying...",
+            "Verify Corrected Text"
+        );
+
+        showMessage(globalMessage, "", "success");
+
+        try {
+            const data = await postJson("/verify-text", { text });
+
+            updateMetrics(data);
+            renderResults(data);
+
+            showMessage(
+                globalMessage,
+                "Corrected text submitted successfully. Review the candidate results and warnings.",
+                "success"
+            );
+        } catch (error) {
+            showMessage(
+                globalMessage,
+                "Verification failed: " + error.message,
+                "error"
+            );
+        } finally {
+            setLoading(
+                verifyCorrectedButton,
+                false,
+                "Verifying...",
+                "Verify Corrected Text"
+            );
+        }
+    });
+
+    restoreOcrButton.addEventListener("click", function () {
+        ocrText.value = originalOcrText;
+
+        showMessage(
+            globalMessage,
+            originalOcrText
+                ? "Original OCR text restored."
+                : "There is no saved OCR text yet.",
+            originalOcrText ? "success" : "error"
+        );
+    });
+
+    imageInput.addEventListener("change", function () {
+        const file = imageInput.files[0];
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            previewUrl = null;
+        }
+
+        if (!file) {
+            imagePreviewContainer.style.display = "none";
+            return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+            showMessage(globalMessage, "Please select a valid image file.", "error");
+            imageInput.value = "";
+            imagePreviewContainer.style.display = "none";
+            return;
+        }
+
+        previewUrl = URL.createObjectURL(file);
+        imagePreview.src = previewUrl;
+        imagePreviewContainer.style.display = "block";
+    });
+
+    clearButton.addEventListener("click", function () {
+        uploadForm.reset();
+        ocrText.value = "";
+        originalOcrText = "";
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            previewUrl = null;
+        }
+
+        imagePreview.removeAttribute("src");
+        imagePreviewContainer.style.display = "none";
+
+        confidenceMetric.textContent = "—";
+        wordMetric.textContent = "—";
+        resultsContainer.replaceChildren();
+        warningsContainer.replaceChildren();
+
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Upload a prescription or enter text above, then run verification.";
+        resultsContainer.appendChild(empty);
+
+        showMessage(globalMessage, "Form cleared.", "success");
+        showMessage(resultSummary, "", "success");
+    });
+
+    checkHealth();
+</script>
 </body>
 </html>
